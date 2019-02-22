@@ -1,5 +1,7 @@
+import React from "react";
+import ReactDOM from "react-dom";
+
 const { useEffect, useState } = React;
-const html = htm.bind(React.createElement);
 
 const usePost = url => {
   const [post, setPost] = useState("");
@@ -11,7 +13,8 @@ const usePost = url => {
 
     const { pathname } = new URL(url);
     const res = await fetch(`/api/post${pathname}`);
-    setPost(await res.text());
+
+    setPost(await res.json());
   };
 
   useEffect(() => {
@@ -25,9 +28,16 @@ const App = () => {
   const url = new URLSearchParams(window.location.search).get("url");
   const post = usePost(url);
 
-  return html`
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://platform.twitter.com/widgets.js";
+
+    document.head.appendChild(script);
+  }, [post]);
+
+  return (
     <section>
-      <style>
+      <style>{`
         html,
         body {
           margin: 0;
@@ -64,32 +74,18 @@ const App = () => {
         main {
           grid-area: preview;
         }
-      </style>
+      `}</style>
 
       <form>
-        <label>
-          Medium Post URL
-        </label>
-        <input name="url" defaultValue="${url}" />
+        <label>Medium Post URL</label>
+        <input name="url" defaultValue={url} />
       </form>
 
-      ${post &&
-        html`
-          <pre>${post}</pre>
-        `}
-      ${post &&
-        html`
-          <main>
-            <${ReactMarkdown} escapeHtml=${false} source=${post} />
-          </main>
-        `}
+      {post && <pre>{post.markdown}</pre>}
+
+      {post && <main dangerouslySetInnerHTML={{ __html: post.markup }} />}
     </section>
-  `;
+  );
 };
 
-ReactDOM.render(
-  html`
-    <${App} />
-  `,
-  document.getElementById("root")
-);
+ReactDOM.render(<App />, document.getElementById("root"));
