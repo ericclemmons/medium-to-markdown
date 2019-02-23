@@ -15,10 +15,12 @@ const fetchJSON = async (url, startAt = 0) => {
 module.exports = async (req, res) => {
   const { user, post } = req.params;
 
-  const { paragraphs } = (await fetchJSON(
+  const raw = await fetchJSON(
     `https://medium.com/${user}/${post}?format=json`,
     16
-  )).payload.value.content.bodyModel;
+  );
+
+  const { paragraphs } = raw.payload.value.content.bodyModel;
 
   const blocks = await Promise.all(
     paragraphs.map(async paragraph => {
@@ -82,5 +84,5 @@ module.exports = async (req, res) => {
     })
   );
 
-  res.json({ markdown, markup });
+  res.json({ markdown, markup, raw });
 };
