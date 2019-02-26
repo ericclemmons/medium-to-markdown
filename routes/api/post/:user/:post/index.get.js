@@ -94,8 +94,6 @@ module.exports = async (req, res) => {
             return;
           }
 
-          console.error({ markup, next });
-
           // Markup inside has to take account of prefix + suffix
           next.start += prefix.length;
           next.end += prefix.length;
