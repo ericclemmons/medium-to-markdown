@@ -45,7 +45,7 @@ const App = () => {
 
         section {
           box-sizing: border-box;
-          display: grid;
+          display: block;
           grid-gap: 4em;
           grid-template-areas:
             "header   header"
