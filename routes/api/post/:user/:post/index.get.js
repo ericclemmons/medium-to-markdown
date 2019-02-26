@@ -20,33 +20,109 @@ module.exports = async (req, res) => {
     16
   );
 
-  const { paragraphs } = raw.payload.value.content.bodyModel;
+  const { paragraphs, sections } = raw.payload.value.content.bodyModel;
 
   const blocks = await Promise.all(
     paragraphs.map(async paragraph => {
-      const { iframe, markups, metadata, name, type, text } = paragraph;
+      const { iframe, metadata, name, text, type } = paragraph;
+
+      // About to mutate this bia bia
+      let markups = JSON.parse(JSON.stringify(paragraph.markups));
+
+      markups.sort((a, b) => {
+        return a.start - b.start || a.end - b.end;
+      });
+
+      let formatted = text;
+
+      while (markups.length) {
+        const markup = markups.shift();
+
+        let prefix = "";
+        let suffix = "";
+
+        switch (markup.type) {
+          case 1:
+            prefix = "**";
+            suffix = "**";
+            break;
+          case 2:
+            prefix = "*";
+            suffix = "*";
+            break;
+
+          case 3:
+            prefix = `[`;
+
+            switch (markup.anchorType) {
+              case 0:
+                suffix = `](${markup.href})`;
+                break;
+              case 2:
+                suffix = `](https://medium.com/u/${markup.userId})`;
+                break;
+              default:
+                console.error(paragraph);
+                throw new Error(`Unknown anchorType: ${markup.anchorType}`);
+            }
+
+            break;
+
+          default:
+            console.error(paragraph);
+            throw new Error(`Unknown markup type: ${markup.type}`);
+        }
+
+        formatted = [
+          formatted.slice(0, markup.start),
+          prefix,
+          formatted.slice(markup.start, markup.end),
+          suffix,
+          formatted.slice(markup.end)
+        ].join("");
+
+        markups.forEach(next => {
+          // Markup before changes aren't shifted
+          if (next.end <= markup.start) {
+            return;
+          }
+
+          // Markup after changes is shifted by additional characters
+          if (next.start >= markup.end) {
+            next.start += prefix.length + suffix.length;
+            next.end += prefix.length + suffix.length;
+            return;
+          }
+
+          console.error({ markup, next });
+
+          // Markup inside has to take account of prefix + suffix
+          next.start += prefix.length;
+          next.end += prefix.length;
+        });
+      }
 
       switch (type) {
         case 1:
-          return text;
+          return formatted;
 
         case 3:
-          return `# ${text}`;
+          return `# ${formatted}`;
 
         case 4:
           const url = `https://cdn-images-1.medium.com/max/${metadata.originalWidth *
             2}/${metadata.id}`;
 
-          return `![${text}](${url})`;
+          return `![${formatted}](${url})`;
 
         case 6:
-          return `> ${text}`;
+          return `> ${formatted}`;
 
         case 7:
-          return `> ## ${text}`;
+          return `### ${formatted}`;
 
         case 9:
-          return `- ${text}`;
+          return `- ${formatted}`;
 
         case 11:
           const resource = (await fetchJSON(
@@ -67,13 +143,17 @@ module.exports = async (req, res) => {
           throw new Error(`Unknown type: ${resource.mediaResourceType}`);
 
         case 13:
-          return `### ${text}`;
+          return `#### ${formatted}`;
       }
 
       console.error(paragraph);
       throw new Error(`Unknown type: ${type}`);
     })
   );
+
+  sections.slice(1).forEach((section, i) => {
+    blocks.splice(section.startIndex + i, 0, "---");
+  });
 
   const markdown = prettier.format(blocks.join("\n\n"), { parser: "markdown" });
 
