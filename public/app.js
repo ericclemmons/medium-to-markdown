@@ -39,15 +39,31 @@ const App = () => {
   }, [post]);
 
   return (
-    <section>
-      <form>
-        <label>Medium Post URL</label>
-        <input name="url" defaultValue={url} />
+    <section className="bg-white flex flex-col font-serif min-h-screen shadow-inner">
+      <form className="p-6">
+        <fieldset className="flex flex-col">
+          <label className="p-2">Medium Post URL</label>
+          <input
+            autoFocus
+            className="font-sans w-full p-2 rounded-sm shadow-outline"
+            name="url"
+            defaultValue={url}
+          />
+        </fieldset>
       </form>
 
-      {post && <pre>{post.markdown}</pre>}
+      {post && (
+        <pre className="border-b h-64 font-mono bg-grey-lighter p-6 overflow-auto shadow-inner">
+          {post.markdown}
+        </pre>
+      )}
 
-      {post && <main dangerouslySetInnerHTML={{ __html: post.markup }} />}
+      {post && (
+        <main
+          className="py-6"
+          dangerouslySetInnerHTML={{ __html: post.markup }}
+        />
+      )}
     </section>
   );
 };
