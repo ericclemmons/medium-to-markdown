@@ -2551,9 +2551,9 @@ hot-module-replacement@^3.0.3:
     is-builtin-module "^1.0.0"
     node-watch "^0.5.8"
 
-"hot-replacement-module@git+https://github.com/ericclemmons/hot-module-replacement.git":
-  version "3.0.2"
-  resolved "git+https://github.com/ericclemmons/hot-module-replacement.git#7ea144567807406c9f2db41f7b3290f153b598cf"
+"hot-replacement-module@https://github.com/ericclemmons/hot-module-replacement.git":
+  version "3.0.3"
+  resolved "https://github.com/ericclemmons/hot-module-replacement.git#2af226b9e8fd1ce75b40b96c0920f053e92db450"
   dependencies:
     is-builtin-module "^1.0.0"
     node-watch "^0.5.8"
@@ -4493,6 +4493,11 @@ react-dom@^16.8.4:
     object-assign "^4.1.1"
     prop-types "^15.6.2"
     scheduler "^0.13.4"
+
+react-error-boundary@^1.2.5:
+  version "1.2.5"
+  resolved "https://registry.yarnpkg.com/react-error-boundary/-/react-error-boundary-1.2.5.tgz#a362cb799d2e58ff8f114f7c4bc25677ce4e4149"
+  integrity sha512-5CPSeLJA2igJNppAgFRwnTL9aK3ojenk65enNzhVyoxYNbHpIJXnChUO7+4vPhkncRA9wvQMXq6Azp2XeXd+iQ==
 
 react-is@^16.8.1:
   version "16.8.3"

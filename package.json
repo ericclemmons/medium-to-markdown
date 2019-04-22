@@ -9,6 +9,7 @@
     "prettier": "^1.16.4",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
+    "react-error-boundary": "^1.2.5",
     "react-markdown": "^4.0.6"
   },
   "scripts": {
