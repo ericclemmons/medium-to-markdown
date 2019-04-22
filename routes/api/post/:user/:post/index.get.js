@@ -68,6 +68,11 @@ module.exports = async (req, res) => {
 
             break;
 
+          case 10:
+            prefix = "`";
+            suffix = "`";
+            break;
+
           default:
             console.error(paragraph);
             throw new Error(`Unknown markup type: ${markup.type}`);
