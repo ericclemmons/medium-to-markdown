@@ -15,6 +15,7 @@
   "scripts": {
     "dev": "node src/server",
     "deploy": "now",
+    "postdeply": "now alias",
     "start": "NODE_ENV=production node src/server"
   }
 }
