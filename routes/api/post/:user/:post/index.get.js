@@ -126,6 +126,9 @@ const convertPost = async (user, post) => {
         case 7:
           return `### ${formatted}`;
 
+        case 8:
+          return "```\n" + formatted + "\n```";
+
         case 9:
           return `- ${formatted}`;
 
