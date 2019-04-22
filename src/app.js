@@ -12,9 +12,15 @@ import { FallbackComponent } from "./FallbackComponent";
 const App = () => {
   return (
     <section className="bg-white flex flex-col font-serif min-h-screen shadow-inner">
-      <form className="p-6">
-        <fieldset className="flex flex-col">
-          <label className="p-2">Medium Post URL</label>
+      <form>
+        <h2 class="bg-yellow p-2">
+          Medium to Markdown
+          <small>
+            , by <a href="https://twitter.com/ericclemmons">Eric Clemmons</a>
+          </small>
+        </h2>
+        <fieldset className="flex flex-col p-4">
+          <label className="p-2">Post URL</label>
           <input
             autoFocus
             className="font-sans w-full p-2 rounded-sm shadow-outline"
