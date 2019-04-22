@@ -13,6 +13,8 @@
     "react-markdown": "^4.0.6"
   },
   "scripts": {
-    "dev": "polydev"
+    "dev": "node src/server",
+    "deploy": "now",
+    "start": "NODE_ENV=production node src/server"
   }
 }
