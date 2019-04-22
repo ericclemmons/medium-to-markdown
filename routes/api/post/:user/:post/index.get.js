@@ -12,13 +12,15 @@ const fetchJSON = async (url, startAt = 0) => {
   return json;
 };
 
-module.exports = async (req, res) => {
-  const { user, post } = req.params;
-
+const convertPost = async (user, post) => {
   const raw = await fetchJSON(
     `https://medium.com/${user}/${post}?format=json`,
     16
   );
+
+  if (raw.error) {
+    throw new Error(raw.error);
+  }
 
   const { paragraphs, sections } = raw.payload.value.content.bodyModel;
 
@@ -63,7 +65,7 @@ module.exports = async (req, res) => {
                 break;
               default:
                 console.error(paragraph);
-                throw new Error(`Unknown anchorType: ${markup.anchorType}`);
+                throw new Error(`Unsupported anchorType: ${markup.anchorType}`);
             }
 
             break;
@@ -75,7 +77,7 @@ module.exports = async (req, res) => {
 
           default:
             console.error(paragraph);
-            throw new Error(`Unknown markup type: ${markup.type}`);
+            throw new Error(`Unsupported markup type: ${markup.type}`);
         }
 
         formatted = [
@@ -143,14 +145,14 @@ module.exports = async (req, res) => {
           }
 
           console.error(resource);
-          throw new Error(`Unknown type: ${resource.mediaResourceType}`);
+          throw new Error(`Unsupported type: ${resource.mediaResourceType}`);
 
         case 13:
           return `#### ${formatted}`;
       }
 
       console.error(paragraph);
-      throw new Error(`Unknown type: ${type}`);
+      throw new Error(`Unsupported type: ${type}`);
     })
   );
 
@@ -167,5 +169,15 @@ module.exports = async (req, res) => {
     })
   );
 
-  res.json({ markdown, markup, raw });
+  return { markdown, markup, raw };
+};
+
+module.exports = async (req, res) => {
+  const { user, post } = req.params;
+
+  try {
+    res.json(await convertPost(user, post));
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
 };
