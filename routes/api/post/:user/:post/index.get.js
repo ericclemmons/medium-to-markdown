@@ -132,6 +132,9 @@ const convertPost = async (user, post) => {
         case 9:
           return `- ${formatted}`;
 
+        case 10:
+          return `1. ${formatted}`;
+
         case 11:
           const resource = (await fetchJSON(
             `https://medium.com/media/${iframe.mediaResourceId}?format=json`,
