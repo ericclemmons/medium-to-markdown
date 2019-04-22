@@ -142,6 +142,17 @@ const convertPost = async (user, post) => {
           )).payload.value;
 
           switch (resource.mediaResourceType) {
+            // Example: https://medium.com/storybookjs/storybook-docs-sneak-peak-5be78445094a
+            case "MediaResourceExternalLink":
+              return `<iframe
+                width="${resource.iframeWidth}"
+                height="${resource.iframeHeight}"
+                src="${resource.iframeSrc}"
+                frameborder="0"
+                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen
+              ></iframe>`;
+
             case "MediaResourceTweet":
               const tweet = await fetchJSON(
                 `https://publish.twitter.com/oembed?url=${resource.href}`
