@@ -22,6 +22,13 @@ const convertPost = async (user, post) => {
     throw new Error(raw.error);
   }
 
+  const {
+    firstPublishedAt,
+    latestPublishedAt,
+    slug,
+    title
+  } = raw.payload.value;
+
   const { paragraphs, sections } = raw.payload.value.content.bodyModel;
 
   const blocks = await Promise.all(
@@ -177,14 +184,25 @@ const convertPost = async (user, post) => {
     blocks.splice(section.startIndex + i, 0, "---");
   });
 
-  const markdown = prettier.format(blocks.join("\n\n"), { parser: "markdown" });
+  const frontmatter = `
+  ---
+  firstPublishedAt: ${firstPublishedAt}
+  latestPublishedAt: ${latestPublishedAt}
+  slug: ${slug}
+  title: ${title}
+  ---
+  `;
 
   const markup = renderToStaticMarkup(
     createElement(ReactMarkdown, {
       escapeHtml: false,
-      source: markdown
+      source: prettier.format(blocks.join("\n\n"), { parser: "markdown" })
     })
   );
+
+  const markdown = prettier.format([frontmatter].concat(blocks).join("\n\n"), {
+    parser: "markdown"
+  });
 
   return { markdown, markup, raw };
 };
