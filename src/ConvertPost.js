@@ -52,9 +52,7 @@ export function ConvertPost() {
   return (
     <Fragment>
       {post && (
-        <pre className="border-b h-64 font-mono bg-grey-lighter p-6 overflow-auto shadow-inner">
-          {post.markdown}
-        </pre>
+        <textarea className="border-b h-64 font-mono bg-gray-100 px-6 overflow-auto shadow-inner text-gray-800" value={post.markdown} />
       )}
 
       {post && (

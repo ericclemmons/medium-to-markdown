@@ -13,7 +13,7 @@ const App = () => {
   return (
     <section className="bg-white flex flex-col font-serif min-h-screen shadow-inner">
       <form>
-        <h2 class="bg-yellow p-2">
+        <h2 className="bg-yellow-400 p-2">
           Medium to Markdown
           <small>
             , by <a href="https://twitter.com/ericclemmons">Eric Clemmons</a>

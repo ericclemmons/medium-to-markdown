@@ -11,7 +11,7 @@ export function FallbackComponent({ componentStack, error }) {
       <p>
         <strong>Whoops!</strong> I haven't seen this type of post yet&hellip;
       </p>
-      <p class="bg-red text-white p-4">
+      <p class="bg-red-500 text-white p-4">
         🔥 <strong>Error:</strong> {error.toString()}
       </p>
       <p>
