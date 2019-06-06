@@ -33,7 +33,7 @@ const convertPost = async (user, post) => {
 
   const blocks = await Promise.all(
     paragraphs.map(async paragraph => {
-      const { iframe, metadata, name, text, type } = paragraph;
+      const { iframe, metadata, mixtapeMetadata, name, text, type } = paragraph;
 
       // About to mutate this bia bia
       let markups = JSON.parse(JSON.stringify(paragraph.markups));
@@ -143,7 +143,7 @@ const convertPost = async (user, post) => {
           return `1. ${formatted}`;
 
         case 11:
-          const resource = (await fetchJSON(
+          var resource = (await fetchJSON(
             `https://medium.com/media/${iframe.mediaResourceId}?format=json`,
             16
           )).payload.value;
@@ -173,6 +173,20 @@ const convertPost = async (user, post) => {
 
         case 13:
           return `#### ${formatted}`;
+
+        case 14:
+          var resource = (await fetchJSON(
+            `https://medium.com/media/${
+              mixtapeMetadata.mediaResourceId
+            }?format=json`,
+            16
+          )).payload.value;
+
+          return `
+> [**${resource.title}**](${resource.href})
+>
+> <small>${resource.description}</small>
+          `;
       }
 
       console.error(paragraph);
