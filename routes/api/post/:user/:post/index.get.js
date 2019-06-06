@@ -32,7 +32,7 @@ const convertPost = async (user, post) => {
   const { paragraphs, sections } = raw.payload.value.content.bodyModel;
 
   const blocks = await Promise.all(
-    paragraphs.map(async paragraph => {
+    paragraphs.map(async (paragraph, i) => {
       const { iframe, metadata, mixtapeMetadata, name, text, type } = paragraph;
 
       // About to mutate this bia bia
@@ -119,7 +119,8 @@ const convertPost = async (user, post) => {
           return formatted;
 
         case 3:
-          return `# ${formatted}`;
+          // Ignore first title
+          return i === 0 ? "" : `# ${formatted}`;
 
         case 4:
           const url = `https://cdn-images-1.medium.com/max/${metadata.originalWidth *
@@ -210,7 +211,9 @@ const convertPost = async (user, post) => {
   const markup = renderToStaticMarkup(
     createElement(ReactMarkdown, {
       escapeHtml: false,
-      source: prettier.format(blocks.join("\n\n"), { parser: "markdown" })
+      source: prettier.format([`# ${title}`].concat(blocks).join("\n\n"), {
+        parser: "markdown"
+      })
     })
   );
 
