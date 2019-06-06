@@ -211,15 +211,29 @@ const convertPost = async (user, post) => {
   const markup = renderToStaticMarkup(
     createElement(ReactMarkdown, {
       escapeHtml: false,
-      source: prettier.format([`# ${title}`].concat(blocks).join("\n\n"), {
-        parser: "markdown"
-      })
+      source: prettier.format(
+        [`# ${title}`]
+          .concat(blocks)
+          .join("\n\n")
+          .split("```\n\n```")
+          .join(""),
+        {
+          parser: "markdown"
+        }
+      )
     })
   );
 
-  const markdown = prettier.format([frontmatter].concat(blocks).join("\n\n"), {
-    parser: "markdown"
-  });
+  const markdown = prettier.format(
+    [frontmatter]
+      .concat(blocks)
+      .join("\n\n")
+      .split("```\n\n```")
+      .join(""),
+    {
+      parser: "markdown"
+    }
+  );
 
   return { markdown, markup, raw };
 };
