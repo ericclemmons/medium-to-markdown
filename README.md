@@ -9,3 +9,7 @@
 ## Author
 
 - [Eric Clemmons](https://twitter.com/ericclemmons)
+
+## LICENSE
+
+MIT @ Eric Clemmons
